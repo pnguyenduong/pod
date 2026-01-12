@@ -37,6 +37,7 @@
 | **Advanced Logger** | 🟢 Implemented | Logs 7+ event types to hardcoded channels. | `src/cogs/logger.py` |
 | **Info Cog** | 🟢 Implemented | User, Server, and Avatar info commands. | `src/cogs/info.py` |
 | **Moderation Cog** | 🟢 Implemented | Kick, Ban, and Unban commands. | `src/cogs/moderation.py` |
+| **Help Cog** | 🟢 Implemented | Custom help command listing cogs and commands. | `src/cogs/help.py` |
 
 ### C. Planned Features
 | Feature | Priority | Description |
