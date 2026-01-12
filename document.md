@@ -36,12 +36,12 @@
 | **Welcome Feature** | 🟢 Implemented | Sends a welcome message when a user joins. | `src/cogs/welcome.py` |
 | **Advanced Logger** | 🟢 Implemented | Logs 7+ event types to hardcoded channels. | `src/cogs/logger.py` |
 | **Info Cog** | 🟢 Implemented | User, Server, and Avatar info commands. | `src/cogs/info.py` |
+| **Moderation Cog** | 🟢 Implemented | Kick, Ban, and Unban commands. | `src/cogs/moderation.py` |
 
 ### C. Planned Features
 | Feature | Priority | Description |
 | :--- | :--- | :--- |
 | **Configuration Refactor** | 🔴 High | Centralize hardcoded IDs into `src/config.py`. |
-| **Moderation Cog** | 🟠 High | Add `kick`, `ban`, `unban` commands. |
 | **Warn System** | 🟡 Medium | Database-backed warning system. |
 
 ## 3. Variable & Configuration Registry
