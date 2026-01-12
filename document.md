@@ -41,7 +41,6 @@
 ### C. Planned Features
 | Feature | Priority | Description |
 | :--- | :--- | :--- |
-| **Configuration Refactor** | 🔴 High | Centralize hardcoded IDs into `src/config.py`. |
 | **Warn System** | 🟡 Medium | Database-backed warning system. |
 
 ## 3. Variable & Configuration Registry
