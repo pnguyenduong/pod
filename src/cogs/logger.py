@@ -2,12 +2,14 @@ import discord
 from discord.ext import commands
 import aiohttp
 import io
+import logging
 
 import config
 
 class Logger(commands.Cog):
     def __init__(self, bot: commands.Bot):
         self.bot = bot
+        self.logger = logging.getLogger("bot.cogs.logger")
         
         # --- CONFIGURATION ---
         self.log_channel_messages = config.LOG_CHANNEL_MESSAGES
@@ -18,11 +20,28 @@ class Logger(commands.Cog):
 
     async def _send_log(self, channel_id: int, embed: discord.Embed, files: list = None):
         """Helper to send log to a specific channel if ID is set."""
-        if channel_id == 0:
+        if not channel_id:
             return
-        channel = self.bot.get_channel(channel_id)
-        if channel:
+
+        try:
+            cid = int(channel_id)
+            if cid == 0:
+                return
+        except (ValueError, TypeError):
+            self.logger.error(f"Invalid channel ID provided: '{channel_id}'. Must be an integer.")
+            return
+            
+        channel = self.bot.get_channel(cid)
+        if not channel:
+            self.logger.warning(f"Log channel with ID {cid} not found.")
+            return
+
+        try:
             await channel.send(embed=embed, files=files or [])
+        except discord.errors.Forbidden:
+            self.logger.warning(f"Missing permissions to send message in channel {channel.name} ({channel.id}).")
+        except Exception as e:
+            self.logger.error(f"Could not send log to channel {channel.id}: {e}")
 
     # --- 1. MESSAGES & IMAGES ---
     @commands.Cog.listener()
@@ -120,6 +139,27 @@ class Logger(commands.Cog):
     @commands.Cog.listener()
     async def on_guild_channel_create(self, channel: discord.abc.GuildChannel):
         embed = discord.Embed(title="📺 Channel Created", description=channel.name, color=discord.Color.blue(), timestamp=discord.utils.utcnow())
+        await self._send_log(self.log_channel_server, embed)
+
+    @commands.Cog.listener()
+    async def on_guild_channel_update(self, before: discord.abc.GuildChannel, after: discord.abc.GuildChannel):
+        """Logs channel updates, specifically name changes."""
+        if before.name == after.name:
+            return
+
+        description = (
+            f"🪭\u2060│ {after.mention}\n"
+            f"Name changed: `#{before.name}` → `#{after.name}`"
+        )
+        
+        embed = discord.Embed(
+            title="Channel Updated",
+            description=description,
+            color=discord.Color.blue(),
+        )
+        
+        embed.set_footer(text=f"ID: {after.id} • {discord.utils.format_dt(discord.utils.utcnow(), style='R')}")
+
         await self._send_log(self.log_channel_server, embed)
 
     @commands.Cog.listener()

@@ -4,6 +4,10 @@ import os
 import sys
 from pathlib import Path
 
+# Add the 'src' directory to the Python path
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+
+
 import discord
 from discord.ext import commands
 from dotenv import load_dotenv
@@ -87,6 +91,7 @@ class Bot(commands.Bot):
 
     async def on_ready(self):
         logger.info(f"Logged in as {self.user} (ID: {self.user.id})")
+        logger.info(f"Process ID: {os.getpid()}")
         logger.info("-------------------------------------------")
 
 async def main():
